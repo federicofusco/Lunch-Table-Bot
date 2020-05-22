@@ -25,4 +25,4 @@ A custom bot for a private discord server
   
 ## Bugs
 Please report __any__ bugs to the [Issues Section](https://github.com/federicofusco/Lunch-Table-Bot/issues).    
-**NOTE: do NOT report any security vulnerabilities in the link above. If you have access to the bot, you may report it by PMing it with the command `!security` or `!vuln`. If for some reason you don't have access to the bot, you can find him in this server [Fedev Development](https://discord.gg/vU4KU4).**
+**NOTE: do NOT report any security vulnerabilities in the link above. If you have access to the bot, you may report it by PMing it with the command `!security` or `!vuln`. If for some reason you don't have access to the bot, you can find him in this server [Fedev Development](https://discord.gg/fNPDcdf).**
