@@ -6,25 +6,31 @@ A custom bot for a private discord server
 
 ## Commands
 - [ ] help
-- [ ] bal
+- [x] bal
+- [ ] bug
 - [ ] pickpocket
 - [ ] steal
 - [ ] shop
 - [ ] lunch
 - [ ] daily
 - [ ] loot
-- [ ] ask
+- [x] ask
 
 ## Details
 - Prefix:
   - __-__
 
-- Owner:
+- Servers:
+  - The Lunch Table (No invite for privacy)
+  
+## Owners
+- Federico Fusco
   - Github: [federicofusco](https://www.github.com/federicofusco)
   - Discord: fede4961#1097
 
-- Servers:
-  - The Lunch Table (No invite for privacy)
+- Henry Langmack
+  - Github: [henry-lang](https://www.github.com/henry-lang)
+  - Discord: henrylang#1054
 
 ## Bugs
 Please report __any__ bugs to the [Issues Section](https://github.com/federicofusco/Lunch-Table-Bot/issues).    
