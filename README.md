@@ -8,9 +8,10 @@ A custom bot for a private discord server
 - [ ] help
 - [x] bal
 - [x] bug
+- [ ] buy
 - [ ] pickpocket
 - [ ] steal
-- [ ] shop
+- [x] shop
 - [x] lunch
 - [x] daily
 - [ ] loot

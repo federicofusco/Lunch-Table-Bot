@@ -39,8 +39,8 @@ function checkAccount ( accountIdentifier, userId ) {
     // Sets the pocket
     db.set ( 'user.pocket.' + userId, 0 );
 
-    // Sets the wallet
-    db.set ( 'user.wallet.' + userId, 0 );
+    // Sets the locker
+    db.set ( 'user.locker.' + userId, 0 );
 
     // Sets the ask counter
     db.set ( 'user.asked.' + userId, 0 );
@@ -78,7 +78,7 @@ client.on ( "message", message => {
 
     var pocket = db.get ( 'user.pocket.' + authorId );
 
-    var wallet = db.get ( 'user.wallet.' + authorId );
+    var locker = db.get ( 'user.locker.' + authorId );
 
     var asked = db.get ( 'user.asked.' + authorId );
 
@@ -192,13 +192,13 @@ client.on ( "message", message => {
 
           }
 
-          // Adds the user to the set so that they can't talk for a minute
+          // Adds the user to the set so that they can't talk for 45 seconds
 
           askedRecently.add(authorId);
 
           setTimeout(() => {
 
-          // Removes the user from the set after a minute
+          // Removes the user from the set after 45 seconds
           askedRecently.delete(authorId);
 
         }, 45000);
@@ -224,12 +224,12 @@ client.on ( "message", message => {
 
         var userPocket = db.get( 'user.pocket.' + mention.user.id);
 
-        var userWallet = db.get( 'user.wallet.' + mention.user.id);
+        var userLocker = db.get( 'user.locker.' + mention.user.id);
 
         const balEmbed = new Discord.MessageEmbed ()
         .setColor('RANDOM')
         .setAuthor(mention.user.username + '\'s Balance:', message.author.avatarURL)
-        .setDescription('**Pocket:** ' + userPocket + '\n**Wallet:** ' + userWallet)
+        .setDescription('**Pocket:** ' + userPocket + '\n**Locker:** ' + userLocker)
         .setTimestamp()
         .setFooter(footer, profile);
 
@@ -243,12 +243,12 @@ client.on ( "message", message => {
 
         var userPocket = db.get( 'user.pocket.' + authorId );
 
-        var userWallet = db.get( 'user.wallet.' + authorId );
+        var userLocker = db.get( 'user.locker.' + authorId );
 
         const balEmbed = new Discord.MessageEmbed ()
         .setColor ( 'RANDOM' )
         .setAuthor ( authorTag + '\'s Balance:', message.author.avatarURL )
-        .setDescription ( '**Pocket:** ' + userPocket + '\n**Wallet:** ' + userWallet )
+        .setDescription ( '**Pocket:** ' + userPocket + '\n**Locker:** ' + userLocker )
         .setTimestamp ()
         .setFooter ( footer, profile );
 
@@ -297,7 +297,7 @@ client.on ( "message", message => {
           // Removes the user from the set after a minute
           hasDaily.delete ( authorId );
 
-        }, 1440000 );
+        }, 86400000 );
      }
 
     }
@@ -362,16 +362,89 @@ client.on ( "message", message => {
 
         message.channel.send ( lunchEmbed );
 
-        // Adds the user to the set so that they can't talk for a minute
+        // Adds the user to the set so that they can't talk three hours
         hadLunch.add ( authorId );
 
         setTimeout ( () => {
 
-          // Removes the user from the set after a minute
+          // Removes the user from the set after three hours
           hadLunch.delete ( authorId );
 
-        }, 60000 );
+        }, 10800000 );
       }
+
+    }
+
+    /* SHOP COMMAND */
+    if ( command === 'shop' || command === 'store' ) {
+
+      // object with all the items in the shop (more will be added in the future)
+      var shopItems = {
+                        "paperclip": {
+                                      "name": "Paper Clip",
+                                      "description": "Can be used to pick lockers open!",
+                                      "buy": 1500,
+                                      "sell": 750
+                                     },
+                        "pencil": {
+                                   "name": "Pencil",
+                                   "description": "Can be used to stab people if they try to pick your locker open!",
+                                   "buy": 3000,
+                                   "sell": 1000
+                                  },
+                        "snack": {
+                                  "name": "Snack",
+                                  "description": "Can be eaten instead of the cafeteria food to avoid vomiting!",
+                                  "buy": 500,
+                                  "sell": 300
+                                 },
+                        "testanswers": {
+                                        "name": "Test Answers",
+                                        "description": "Can be used to answer correctly on a quiz or test!",
+                                        "buy": 5000,
+                                        "sell": 1000
+                                       },
+                        "phone": {
+                                  "name": "Phone",
+                                  "Descrpition": "Call your friends during class!",
+                                  "buy": 10000,
+                                  "sell": 2000
+                                 },
+                        "remote": {
+                                   "name": "Projector Remote",
+                                   "description": "Use this to be able to edit *anyone\'s* messages!\n*Until it gets confiscated in about 7-10 minutes",
+                                   "buy": 15000,
+                                   "sell": 3000
+                                  },
+                        "fakeid": {
+                                   "name": "Fake ID",
+                                   "description": "Can be used to change your nickname!",
+                                   "buy": 13000,
+                                   "sell": 100
+                                  }
+                      }
+
+                      // Generates embed to send in response
+                      const shopEmbed = new Discord.MessageEmbed ()
+                      .setColor ( 'RANDOM' )
+                      .setTitle ( 'School Shop (unofficial)' )
+                      .addField ( ':paperclip: **Paper Clip**', '`` $' + shopItems.paperclip.buy + ' ``', true )
+                      .addField('\u200b', '\u200b', true )
+                      .addField ( ':pencil2: **Pencil**', '`` $' + shopItems.pencil.buy + ' ``', true )
+                      .addField('\u200b', '\u200b' )
+                      .addField ( ':canned_food: **Snack**', '`` $' + shopItems.snack.buy + ' ``', true )
+                      .addField('\u200b', '\u200b', true )
+                      .addField ( ':newspaper: **Test Answers**', '`` $' + shopItems.testanswers.buy + ' ``', true )
+                      .addField('\u200b', '\u200b' )
+                      .addField ( ':iphone: **Phone**', '`` $' + shopItems.phone.buy + ' ``', true )
+                      .addField('\u200b', '\u200b', true )
+                      .addField ( ':control_knobs: **Remote**', '`` $' + shopItems.remote.buy + ' ``', true )
+                      .addField('\u200b', '\u200b' )
+                      .addField ( ':credit_card: **Fake ID**', '`` $' + shopItems.fakeid.buy + ' ``', true )
+                      .setThumbnail ( 'https://cdn.glitch.com/b1276a8f-0390-4506-b0c6-6be33d4596c2%2Fstore.jpg?v=1590766699998' )
+
+                      // sendds embed into the channel
+                      message.channel.send ( shopEmbed );
 
     }
 
