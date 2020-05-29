@@ -7,12 +7,12 @@ A custom bot for a private discord server
 ## Commands
 - [ ] help
 - [x] bal
-- [ ] bug
+- [x] bug
 - [ ] pickpocket
 - [ ] steal
 - [ ] shop
-- [ ] lunch
-- [ ] daily
+- [x] lunch
+- [x] daily
 - [ ] loot
 - [x] ask
 
@@ -22,7 +22,7 @@ A custom bot for a private discord server
 
 - Servers:
   - The Lunch Table (No invite for privacy)
-  
+
 ## Owners
 - Federico Fusco
   - Github: [federicofusco](https://www.github.com/federicofusco)

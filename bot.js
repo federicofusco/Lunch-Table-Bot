@@ -1,14 +1,16 @@
 // Gets all the npm modules
 // Discord.js
-const Discord = require("discord.js");
+const Discord = require ( "discord.js" );
 
-const db = require("quick.db");
+const db = require ( "quick.db" ) ;
 
-const client = new Discord.Client();
+const client = new Discord.Client ();
 
-const http = require("http");
+const http = require ( "http" ) ;
 
-const askedRecently = new Set();
+const askedRecently = new Set ();
+const hasDaily = new Set ();
+const hadLunch = new Set ();
 
 const prefix = "-";
 
@@ -205,8 +207,7 @@ client.on ( "message", message => {
 
     }
 
-
-
+    /* BAL COMMAND */
 
     if ( command === 'bal' ) {
 
@@ -245,14 +246,131 @@ client.on ( "message", message => {
         var userWallet = db.get( 'user.wallet.' + authorId );
 
         const balEmbed = new Discord.MessageEmbed ()
-        .setColor('RANDOM')
-        .setAuthor( message.author.username + '\'s Balance:', message.author.avatarURL )
-        .setDescription('**Pocket:** ' + userPocket + '\n**Wallet:** ' + userWallet)
-        .setTimestamp()
-        .setFooter(footer, profile);
+        .setColor ( 'RANDOM' )
+        .setAuthor ( authorTag + '\'s Balance:', message.author.avatarURL )
+        .setDescription ( '**Pocket:** ' + userPocket + '\n**Wallet:** ' + userWallet )
+        .setTimestamp ()
+        .setFooter ( footer, profile );
 
-        message.channel.send(balEmbed);
+        message.channel.send ( balEmbed );
 
+      }
+
+    }
+
+    /* DAILY COMMAND */
+
+    if ( command === 'daily' || command === 'day' ) {
+
+      checkAccount ( account, authorId );
+
+      if ( hasDaily.has ( authorId ) ) {
+
+        const usedDailyEarlyEmbed = new Discord.MessageEmbed ()
+        .setColor ( 'RANDOM' )
+        .setAuthor ( 'Yo ' + authorTag + ',', avatar )
+        .setDescription ( 'You gotta calm down <@' + authorId + '>,\n the default wait time\'s ``24 hours``.')
+        .setTimestamp ()
+        .setFooter ( footer, profile );
+
+        message.channel.send ( usedDailyEarlyEmbed );
+
+      } else {
+
+        db.add ( 'user.pocket.' + authorId, 75 );
+
+        const usedDailyEmbed = new Discord.MessageEmbed ()
+        .setColor ( 'RANDOM' )
+        .setAuthor ( authorTag, avatar )
+        .setDescription ( 'Yay <@' + authorId + '>! you used your daily!\nYou found ``$75`` on the bathroom floor!' )
+        .setTimestamp ()
+        .setFooter ( footer, profile );
+
+        message.channel.send ( usedDailyEmbed );
+
+
+        // Adds the user to the set so that they can't use the command for a day
+        hasDaily.add ( authorId );
+
+        setTimeout ( () => {
+
+          // Removes the user from the set after a minute
+          hasDaily.delete ( authorId );
+
+        }, 1440000 );
+     }
+
+    }
+
+    /* BUG COMMAND */
+
+    if ( command === 'bug' ) {
+
+      const bugEmbed = new Discord.MessageEmbed ()
+      .setColor ( 'RANDOM' )
+      .setTitle ( 'Report Bug', 'https://github.com/federicofusco/Lunch-Table-Bot/issues' )
+      .setURL ( 'https://www.google.com' )
+      .setDescription ( 'Yo <@' + authorId + '>, report a bug by clicking on this message!' )
+      .setTimestamp ()
+      .setFooter ( footer, profile );
+
+      message.channel.send ( bugEmbed );
+
+    }
+
+    /* LUNCH COMMAND */
+    if ( command === 'lunch' ) {
+
+
+      if ( hadLunch.has ( authorId ) ) {
+
+        const alreadyOrderedLunch = new Discord.MessageEmbed ()
+        .setColor ( 'RANDOM' )
+        .setAuthor ( 'Yo ' + authorTag + ',', avatar )
+        .setDescription ( 'Still hungry bro? Sucks cuz you gotta wait ``3 hours`` to get another lunch bro.')
+        .setTimestamp ()
+        .setFooter ( footer, profile );
+
+        message.channel.send ( alreadyOrderedLunch );
+
+      } else {
+
+        var lunchMenu = {
+                        1: "Sloppy ~~Joe~~ Diarrhea",
+                        2: "Boat Pizza",
+                        3: "Stale Bread w/ Expired Milk",
+                        4: "League of Legends",
+                        5: "Block of *Solid* Pudding",
+                        6: "Melted Ice Cream",
+                        7: "Serghi127's Ban Record\n(You get a second one if you can finish it LMAO)",
+                        8: "Plastic Spoon",
+                        9: "Moldy Fruit",
+                        10: "Projectile Vomit",
+                        11: "Spit Ball"
+                      }
+
+        var meal = getRandomRange ( 1, 11 );
+
+        var mealName = lunchMenu [ meal ];
+
+        const lunchEmbed = new Discord.MessageEmbed ()
+        .setColor ( 'RANDOM' )
+        .setAuthor ( 'Here\'s your lunch boiii', avatar )
+        .setDescription ( '``' + mealName + '`` Comin\' up for <@' + authorId + '>!\n\n\nhehe, good luck!' )
+        .setTimestamp ()
+        .setFooter ( footer, profile );
+
+        message.channel.send ( lunchEmbed );
+
+        // Adds the user to the set so that they can't talk for a minute
+        hadLunch.add ( authorId );
+
+        setTimeout ( () => {
+
+          // Removes the user from the set after a minute
+          hadLunch.delete ( authorId );
+
+        }, 60000 );
       }
 
     }
