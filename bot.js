@@ -12,7 +12,7 @@ const askedRecently = new Set ();
 const hasDaily = new Set ();
 const hadLunch = new Set ();
 
-const prefix = "-";
+const prefix = "?";
 
 const footer = "The Lunch Bot by fede4961#1097 and henrylang#1054";
 
@@ -85,7 +85,7 @@ client.on ( "message", message => {
     var account = db.get ( 'user.account.' + authorId );
 
     // If the user wants to run an "ask" command
-    if ( command === "ask" ) {
+    if ( command === 'ask' || command === 'beg' ) {
 
       if ( askedRecently.has ( authorId ) ) {
 
@@ -209,7 +209,7 @@ client.on ( "message", message => {
 
     /* BAL COMMAND */
 
-    if ( command === 'bal' ) {
+    if ( command === 'bal' || command === 'money' ) {
 
       console.log(authorTag + ' is running a -bal command!');
 
@@ -304,7 +304,7 @@ client.on ( "message", message => {
 
     /* BUG COMMAND */
 
-    if ( command === 'bug' ) {
+    if ( command === 'bug' || command === 'vuln' ) {
 
       const bugEmbed = new Discord.MessageEmbed ()
       .setColor ( 'RANDOM' )
@@ -319,7 +319,7 @@ client.on ( "message", message => {
     }
 
     /* LUNCH COMMAND */
-    if ( command === 'lunch' ) {
+    if ( command === 'lunch' || command === 'food' ) {
 
 
       if ( hadLunch.has ( authorId ) ) {
@@ -445,6 +445,136 @@ client.on ( "message", message => {
 
                       // sendds embed into the channel
                       message.channel.send ( shopEmbed );
+
+    }
+
+    /* HELP COMMAND */
+    if ( command === 'help' || command === 'h' ) {
+
+      const commands = {
+                        help: {
+                               "icon": ":grey_question:",
+                               "command": "?help",
+                               "description": "A command used to learn how to use all the other commands!",
+                               "help_command": "contact fede4961#1097 or henrylang#1054",
+                               "alias": "h",
+                               "command_args": [
+                                                {"arg": "lunch", "description": "Command (?lunch)"},
+                                                {"arg": "bal", "description": "Command (?bal)"},
+                                                {"arg": "shop", "description": "Command (?shop)"},
+                                                {"arg": "daily", "description": "Command (?daily)"},
+                                                {"arg": "bug", "description": "Command (?bug)"},
+                                                {"arg": "ask", "description": "Command (?ask)"}
+                                               ]
+                               },
+                        lunch: {
+                                "icon": ":canned_food:",
+                                "command": "?lunch",
+                                "description": "Get ya lunch boiii",
+                                "help_command": "?help lunch",
+                                "alias": "food",
+                                "command_args": []
+                               },
+                        bal: {
+                              "icon": ":money_with_wings:",
+                              "command": "?bal",
+                              "description": "Get people's bank info...",
+                              "help_command": "?help bal",
+                              "alias": "money",
+                              "command_args": [
+                                               {"arg": "@user", "description": "User mention which specifies which user's balance to check lol"}
+                                              ]
+                             },
+                        shop: {
+                               "icon": ":shopping_bags:",
+                               "command": "?shop",
+                               "description": "Take a lovle' trip to the mall with ya friends!",
+                               "help_command": "?help shop",
+                               "alias": "store",
+                               "command_args": [
+                                                {"arg": "Shop Item", "description": "If you include an item name, you'll get a brief description of the item"}
+                                               ]
+                              },
+                        daily: {
+                                "icon": ":calendar:",
+                                "command": "?daily",
+                                "description": "Get ya daily allowance!",
+                                "help_command": "?help daily",
+                                "alias": "day",
+                                "command_args" : []
+                               },
+                        bug: {
+                              "icon": ":computer:",
+                              "command": "?bug",
+                              "description": "Report a bug, and we'll fix it soon enough.\neither that or we'll send you a passive aggressive ping.",
+                              "help_command": "?help bug",
+                              "alias": "vuln",
+                              "command_args": []
+                             },
+                        ask: {
+                              "icon": ":pray:",
+                              "command": "?ask",
+                              "description": "Beg anyone from your mom, to your local pedophile on hopes of money.",
+                              "help_command": "?help ask",
+                              "alias": "beg",
+                              "command_args": []
+                             }
+                      };
+
+      if ( args.length > 0 ) {
+
+        if ( args [ 0 ] !== 'help' || args [ 0 ] !== 'h' ) {
+
+          var commandList = null;
+
+          var commandObject = commands [ args [ 0 ] ];
+
+          if ( commandObject.command_args.length === 0 ) {
+
+            commandObject.command_args = [{"arg": "", "description": ""}];
+
+          }
+
+          var helpCommandEmbed = new Discord.MessageEmbed ()
+          .setColor ( 'RANDOM' )
+          .setAuthor ( 'Here ya go!')
+          .addField ( '**' + commandObject.icon + ' ' + commandObject.command + '**', '\n**Description: ** *' + commandObject.description + '\n\nArguments: \n``' + commandObject.command_args[0].arg + ':`` ' + commandObject.command_args[0].description + '\n\nAliases: \n``' + commandObject.alias + '``', true)
+          .setTimestamp ()
+          .setFooter ( footer, profile );
+
+          message.channel.send (helpCommandEmbed);
+
+        } else {
+
+          var helpCommandEmbed = new Discord.MessageEmbed ()
+          .setColor ( 'RANDOM' )
+          .setAuthor ( 'Boi you know what the help command does!' )
+          .setTimestamp ()
+          .setFooter ( footer, profile );
+
+          message.channel.send ( helpCommandEmbed );
+
+        }
+
+      } else {
+
+        var helpCommandEmbed = new Discord.MessageEmbed ()
+        .setColor ( 'RANDOM' )
+        .setAuthor ('Here ya go buddy!')
+        .setTimestamp ()
+        .setFooter ( footer, profile )
+
+        for ( var x = 0; x < Object.keys(commands).length; x++ ) {
+
+          commandObject = Object.values ( commands ) [ x ];
+
+          helpCommandEmbed = helpCommandEmbed.addField ( '**' + commandObject.icon  + ' ' + commandObject.command + '**', '\n**Description: ** *' + commandObject.description + '*\n\nTo find out more about ' + commandObject.command + ',\n do ``' + commandObject.help_command + '``\n\n', true );
+
+        }
+
+        message.channel.send ( helpCommandEmbed );
+
+      }
 
     }
 

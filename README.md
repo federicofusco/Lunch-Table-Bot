@@ -5,7 +5,7 @@ A custom bot for a private discord server
 - Will be deployed publicly soon.
 
 ## Commands
-- [ ] help
+- [x] help
 - [x] bal
 - [x] bug
 - [ ] buy
